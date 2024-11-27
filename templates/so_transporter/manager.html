@@ -1,0 +1,88 @@
+{% extends "admin/core/base.html" %}
+{% load foundation %}
+
+{% block title %}Science Open Transporter Manager{% endblock %}
+
+{% block body %}
+<div class="box">
+    <div class="title-area">
+        <h2>{% if request.journal %}{{ request.journal.name }}{% else %}{{ request.press.name }}{% endif %} Issues</h2>
+    </div>
+    <div class="content">
+      <div class="bs-callout bs-callout-info">
+         <p>
+           <span class="fa fa-info-circle" aria-hidden="true"></span>
+          This interface allows you to send an issue, via FTP, to Science Open.
+          You can also download an issue zip file to inspect it.
+        </p>
+      </div>
+
+        <table class="table" id="issue-list">
+    <thead>
+        <tr>
+            {% if not request.journal %}
+            <th>{{ request.journal.name }}</th>
+            {% endif %}
+            <th>Issue Title</th>
+            <th>Date Published</th>
+            <th>Manual Deposit</th>
+            <th>Download</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for issue in issues %}
+        <tr>
+            {% if not request.journal %}
+            <td>
+                {{ issue.journal.name }}
+            </td>
+            {% endif %}
+            <td>
+                {{ issue.display_title }}
+            </td>
+            <td>
+                {{ issue.date_published }}
+            </td>
+            <td>
+                <form method="post">
+                    {% csrf_token %}
+                    <button
+                        class="small success button"
+                        type="submit"
+                        name="transport"
+                        value="{{ issue.pk }}">
+                        Send to Science Open
+                    </button>
+                </form>
+            </td>
+            <td>
+                <form method="post">
+                    {% csrf_token %}
+                    <button
+                        class="small success button"
+                        type="submit"
+                        name="download"
+                        value="{{ issue.pk }}">
+                        Download Zip
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+    </div>
+</div>
+{% endblock body %}
+
+{% block js %}
+  {% include "admin/elements/datatables.html" %}
+  <script>
+  $(document).ready(function() {
+    $("#issue-list").DataTable({
+      "lengthMenu": [[25, 50, 10, 5, -1], [25, 50, 10, 5, "All"]],
+      "stateSave": true
+    });
+  });
+  </script>
+{% endblock js %}
