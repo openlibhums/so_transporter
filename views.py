@@ -10,7 +10,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 def manager(request):
     if request.journal:
         issues = models.Issue.objects.filter(
-            journal=request.journal
+            journal=request.journal,
+            date__isnull=False,
         )
     else:
         issues = models.Issue.objects.all().order_by(

@@ -18,7 +18,7 @@ The following settings should be added to your `settings.py` file.
 ```python
 SO_FTP_SERVER = 'a.server.com'
 SO_FTP_USERNAME = 'ausername'
-SO_FTP_PASSWORD = 'apassword',
+SO_FTP_PASSWORD = 'apassword'
 ```
 
 ## How it works
